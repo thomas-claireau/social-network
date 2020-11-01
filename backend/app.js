@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 
 app.use((req, res, next) => {
@@ -11,45 +12,12 @@ app.use((req, res, next) => {
 	next();
 });
 
-// middleware
-app.use(express.json());
-app.use(express.urlencoded());
+// parse requests of content-type: application/json
+app.use(bodyParser.json());
 
-// CRUD USER
-app.get('/users', (req, res) => {
-	res.status(200).json({
-		action: 'GET USERS',
-	});
-});
+// parse requests of content-type: application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/users/:id', (req, res) => {
-	res.status(200).json({
-		action: `GET USER ${req.params.id}`,
-	});
-});
-
-app.post('/users', (req, res) => {
-	console.log(req.body);
-
-	res.status(201).json({
-		action: 'POST USER',
-	});
-});
-
-app.put('/users/:id', (req, res) => {
-	console.log(req.body);
-
-	res.status(204);
-});
-
-app.delete('/users/:id', (req, res) => {
-	res.status(204);
-});
-// END CRUD USER
-
-// app.use((req, res, next) => {
-// 	console.log(Date(Date.now()));
-// 	next();
-// });
+require('./routes/user.route.js')(app);
 
 module.exports = app;

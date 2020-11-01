@@ -10,7 +10,7 @@ GET http://localhost:3000/users
 
 ###
 
-GET http://localhost:3000/users/dfdfs
+GET http://localhost:3000/users/1
 
 ###
 
@@ -18,35 +18,30 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-	"id": 1,
-	"email": "jean.delatour@gmail.com",
-	"firtname": "Jean",
+	"email": "j.delatour@gmail.com",
+	"firstname": "Jean",
 	"lastname": "Delatour",
 	"biography": "lorem ipsum",
 	"isAdmin": false,
-	"createdAt": "2020-10-15 17:18:13",
-	"updatedAt": "2020-10-15 17:18:13"
+	"createdAt": "2020-11-03 09:22:06"
 }
 
 ###
 
-PUT http://localhost:3000/users/1
+PUT http://localhost:3000/users/3
 Content-Type: application/json
 
 {
-	"id": 1,
-	"email": "jean.delatour@gmail.com",
-	"firtname": "Jean",
+	"email": "j.delatour@gmail.com",
+	"firstname": "Jean",
 	"lastname": "Delatour",
-	"biography": "lorem ipsum",
-	"isAdmin": false,
-	"createdAt": "2020-10-15 17:18:13",
-	"updatedAt": "2020-10-15 17:18:13"
+	"biography": "lorem ipsum 2",
+	"isAdmin": false
 }
 
 ###
 
-DELETE http://localhost:3000/users/1
+DELETE http://localhost:3000/users/5
 
 
 
