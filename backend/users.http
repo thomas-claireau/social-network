@@ -1,7 +1,5 @@
 ###
 
-###
-
 GET http://localhost:3000
 
 ###
@@ -42,6 +40,3 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:3000/users/5
-
-
-

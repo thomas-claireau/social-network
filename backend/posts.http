@@ -1,0 +1,37 @@
+###
+
+GET http://localhost:3000
+
+###
+
+GET http://localhost:3000/posts
+
+###
+
+GET http://localhost:3000/posts/fd
+
+###
+
+POST http://localhost:3000/posts
+Content-Type: application/json
+
+{
+	"userId": 1,
+	"title": "Titre du post 2",
+	"content": "Contenu du post",
+	"createdAt": "2020-11-03 09:22:06"
+}
+
+###
+
+PUT http://localhost:3000/posts/3
+Content-Type: application/json
+
+{
+	"title": "Titre du post modifié",
+	"content": "Contenu du post"
+}
+
+###
+
+DELETE http://localhost:3000/posts/3
