@@ -8,9 +8,9 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
 // Routes Imports
-const users = require('./routes/user');
-const posts = require('./routes/post');
-// const comments = require('./routes/comment');
+const users = require('./routes/user.route');
+const posts = require('./routes/post.route');
+// const comments = require('./routes/comment.route');
 
 // Express app launching
 const app = express();

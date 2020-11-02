@@ -36,7 +36,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
 	models.User.findOne({
 		attributes: ['id', 'email', 'firstname', 'lastname', 'isAdmin', 'biography'],
-		where: { id: req.params.id },
+		where: { id: req.params.userId },
 	})
 		.then((user) => res.status(200).json(user))
 		.catch((error) => res.status(500).json(error));
