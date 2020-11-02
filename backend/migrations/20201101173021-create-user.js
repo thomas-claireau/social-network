@@ -11,6 +11,11 @@ module.exports = {
 			email: {
 				allowNull: false,
 				type: Sequelize.STRING,
+				unique: true,
+			},
+			password: {
+				allowNull: false,
+				type: Sequelize.STRING,
 			},
 			firstname: {
 				allowNull: false,
@@ -20,9 +25,14 @@ module.exports = {
 				allowNull: false,
 				type: Sequelize.STRING,
 			},
-			biography: {
+			username: {
 				allowNull: false,
 				type: Sequelize.STRING,
+				unique: true,
+			},
+			biography: {
+				allowNull: false,
+				type: Sequelize.TEXT,
 			},
 			isAdmin: {
 				allowNull: false,
