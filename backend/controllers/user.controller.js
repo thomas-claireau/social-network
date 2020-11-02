@@ -1,33 +1,42 @@
 const models = require('../models');
+const bcrypt = require('bcrypt');
+const jwt = require('../utils/jwt');
 
 // Create and Save a new User
 exports.create = (req, res) => {
-	if (!req.body) {
-		res.status(400).send({
-			message: 'Content can not be empty !',
-		});
+	const userBody = req.body;
 
-		return;
-	}
-
-	// create a user
-	const user = new User({ ...req.body });
-
-	// save user in DB
-	User.create(user, (err, data) => {
-		if (err) {
-			res.status(err.code).send({
-				message: err.message || 'Some error occurred while creating the User',
+	models.User.findOne({
+		attributes: ['email'],
+		where: { email: userBody.email },
+	}).then((user) => {
+		if (user) {
+			res.status(409).json({
+				error: "L'email utilisé correspond déja a un compte existant",
 			});
-		} else {
-			res.status(201).send(data);
 		}
+
+		bcrypt.hash(userBody.password, 10, function(err, bcryptPassword) {
+			models.User.create({ ...userBody, password: bcryptPassword })
+				.then((user) => {
+					res.status(200).json({
+						userId: user.dataValues.id,
+						token: jwt.generateToken(user.dataValues),
+						isAdmin: user.dataValues.isAdmin,
+					});
+				})
+				.catch((err) => {
+					res.status(501).json({ err });
+				});
+		});
 	});
 };
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-	models.User.findAll({ attributes: ['email', 'firstname', 'lastname', 'isAdmin', 'biography'] })
+	models.User.findAll({
+		attributes: ['email', 'firstname', 'lastname', 'username', 'isAdmin', 'biography'],
+	})
 		.then((users) => res.status(200).json(users))
 		.catch((error) => res.status(400).json({ error }));
 };
@@ -35,7 +44,7 @@ exports.findAll = (req, res) => {
 // Get one user
 exports.findOne = (req, res) => {
 	models.User.findOne({
-		attributes: ['id', 'email', 'firstname', 'lastname', 'isAdmin', 'biography'],
+		attributes: ['id', 'email', 'firstname', 'lastname', 'username', 'isAdmin', 'biography'],
 		where: { id: req.params.userId },
 	})
 		.then((user) => res.status(200).json(user))
@@ -44,21 +53,8 @@ exports.findOne = (req, res) => {
 
 // Update a User identified by the userId in the request
 exports.update = (req, res) => {
-	User.updateById(req.params.userId, req.body, (err, data) => {
-		if (err) {
-			if (err.kind === 'not_found') {
-				res.status(404).send({
-					message: `Not found User with id ${res.params.userId}`,
-				});
-			} else {
-				res.status(500).send({
-					message: `Error retrieving User with id ${req.params.userId}`,
-				});
-			}
-		} else {
-			res.send(data);
-		}
-	});
+	const userBody = req.body;
+	const userId = req.headers.authorization ? jwt.getUserId(req.headers.authorization) : false;
 };
 
 // Delete a User with the specified userId in the request

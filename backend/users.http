@@ -17,22 +17,26 @@ Content-Type: application/json
 
 {
 	"email": "j.delatour@gmail.com",
+	"password": "password",
 	"firstname": "Jean",
 	"lastname": "Delatour",
+	"username": "thisisjean",
 	"biography": "lorem ipsum",
-	"isAdmin": false,
-	"createdAt": "2020-11-03 09:22:06"
+	"isAdmin": false
 }
 
 ###
 
-PUT http://localhost:3000/users/3
+PUT http://localhost:3000/users/2
 Content-Type: application/json
 
 {
 	"email": "j.delatour@gmail.com",
+	"password": "password",
+	"newPassword": "password2",
 	"firstname": "Jean",
 	"lastname": "Delatour",
+	"username": "thisisjean",
 	"biography": "lorem ipsum 2",
 	"isAdmin": false
 }
