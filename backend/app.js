@@ -1,28 +1,31 @@
 const express = require('express');
+const logger = require('morgan');
 const bodyParser = require('body-parser');
+
+// This will be our application entry. We'll setup our server here.
+const http = require('http');
+
+// Set up the express app
 const app = express();
 
-app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	res.setHeader(
-		'Access-Control-Allow-Headers',
-		'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization'
-	);
-	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-	next();
-});
+// Log requests to the console.
+app.use(logger('dev'));
 
-// parse requests of content-type: application/json
+// Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// parse requests of content-type: application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+// Setup a default catch-all route that sends back a welcome message in JSON format.
+app.get('*', (req, res) =>
+	res.status(200).send({
+		message: 'Welcome to the beginning of nothingness.',
+	})
+);
 
-app.get('/', (req, res) => {
-	res.send('API social network');
-});
+const port = parseInt(process.env.PORT, 10) || 8000;
+app.set('port', port);
 
-require('./routes/user.route.js')(app);
-require('./routes/post.route.js')(app);
+const server = http.createServer(app);
+server.listen(port);
 
 module.exports = app;
