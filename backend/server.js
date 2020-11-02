@@ -1,6 +1,8 @@
+// Imports
 const http = require('http');
 const app = require('./app');
 
+//  Setting the port
 const normalizePort = (val) => {
 	const port = parseInt(val, 10);
 
@@ -12,9 +14,11 @@ const normalizePort = (val) => {
 	}
 	return false;
 };
+
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
+// Error endelling
 const errorHandler = (error) => {
 	if (error.syscall !== 'listen') {
 		throw error;
@@ -35,13 +39,12 @@ const errorHandler = (error) => {
 	}
 };
 
+// Redirecting the server process to Express app
 const server = http.createServer(app);
-
 server.on('error', errorHandler);
 server.on('listening', () => {
 	const address = server.address();
 	const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
 	console.log('Listening on ' + bind);
 });
-
 server.listen(port);

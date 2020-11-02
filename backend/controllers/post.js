@@ -1,4 +1,4 @@
-const Post = require('../models/post.model');
+const models = require('../models');
 
 // Create and Save a new Post
 exports.create = (req, res) => {
@@ -27,15 +27,23 @@ exports.create = (req, res) => {
 
 // Retrieve all Posts from the database.
 exports.findAll = (req, res) => {
-	Post.getAll((err, data) => {
-		if (err) {
-			res.status(500).send({
-				message: err.message || 'Some error occurrend while retrieving posts',
-			});
-		} else {
-			res.send(data);
-		}
-	});
+	models.Post.findAll({
+		include: [
+			{
+				model: models.User,
+				attributes: ['username'],
+			},
+		],
+		order: [['createdAt', 'DESC']],
+	})
+		.then((posts) => {
+			if (posts.length > null) {
+				res.status(200).json(posts);
+			} else {
+				res.status(404).json({ error: 'Pas de post à afficher' });
+			}
+		})
+		.catch((err) => res.status(500).json(err));
 };
 
 // Find a single Post with a postId

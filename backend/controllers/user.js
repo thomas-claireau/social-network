@@ -1,4 +1,4 @@
-const User = require('../models/user.model');
+const models = require('../models');
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -27,34 +27,19 @@ exports.create = (req, res) => {
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-	User.getAll((err, data) => {
-		if (err) {
-			res.status(500).send({
-				message: err.message || 'Some error occurrend while retrieving users',
-			});
-		} else {
-			res.send(data);
-		}
-	});
+	models.User.findAll({ attributes: ['email', 'firstname', 'lastname', 'isAdmin', 'biography'] })
+		.then((users) => res.status(200).json(users))
+		.catch((error) => res.status(400).json({ error }));
 };
 
-// Find a single User with a userId
+// Get one user
 exports.findOne = (req, res) => {
-	User.findById(req.params.userId, (err, data) => {
-		if (err) {
-			if (err.kind === 'not_found') {
-				res.status(404).send({
-					message: `Not found User with id ${res.params.userId}`,
-				});
-			} else {
-				res.status(500).send({
-					message: `Error retrieving User with id ${req.params.userId}`,
-				});
-			}
-		} else {
-			res.send(data);
-		}
-	});
+	models.User.findOne({
+		attributes: ['id', 'email', 'firstname', 'lastname', 'isAdmin', 'biography'],
+		where: { id: req.params.id },
+	})
+		.then((user) => res.status(200).json(user))
+		.catch((error) => res.status(500).json(error));
 };
 
 // Update a User identified by the userId in the request
@@ -77,20 +62,22 @@ exports.update = (req, res) => {
 };
 
 // Delete a User with the specified userId in the request
-exports.delete = (req, res) => {
-	User.remove(req.params.userId, (err, data) => {
-		if (err) {
-			if (err.kind === 'not_found') {
-				res.status(404).send({
-					message: `Not found User with id ${res.params.userId}`,
-				});
-			} else {
-				res.status(500).send({
-					message: `Error retrieving User with id ${req.params.userId}`,
-				});
+exports.delete = (req, res, next) => {
+	const userId = jwt.getUserId(req.headers.authorization);
+
+	models.User.findOne({
+		where: { id: userId },
+	})
+		.then((user) => {
+			if (!user) {
+				res.status(401).json({ error: 'Veuillez vous connecter !' });
 			}
-		} else {
-			res.send({ message: `User ${req.params.userId} deleted` });
-		}
-	});
+
+			models.User.destroy({
+				where: { id: user.id },
+			})
+				.then(() => res.end())
+				.catch((err) => console.log(err));
+		})
+		.catch((err) => res.status(500).json(err));
 };
