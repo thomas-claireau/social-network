@@ -4,9 +4,7 @@ const jwt = require('../utils/jwt');
 // Create and Save a new Post
 exports.create = (req, res) => {
 	const postBody = req.body;
-	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
-
-	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+	const jwtUserId = jwt.getUserId(req.headers.authorization);
 
 	models.Post.findOne({
 		attributes: ['slug', 'userId'],
@@ -40,10 +38,6 @@ exports.create = (req, res) => {
 
 // Retrieve all Posts from the database.
 exports.findAll = (req, res) => {
-	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
-
-	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
-
 	models.Post.findAll({
 		include: [
 			{
@@ -65,10 +59,6 @@ exports.findAll = (req, res) => {
 
 // Find a single Post with a postId
 exports.findOne = (req, res) => {
-	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
-
-	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
-
 	models.Post.findOne({
 		attributes: ['id', 'userId', 'title', 'slug', 'content', 'createdAt', 'updatedAt'],
 		where: { id: req.params.postId },
@@ -87,9 +77,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
 	const postBody = req.body;
 	const id = req.params.postId;
-	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
-
-	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+	const jwtUserId = jwt.getUserId(req.headers.authorization);
 
 	models.Post.findOne({
 		attributes: ['id', 'slug', 'userId'],
@@ -134,9 +122,7 @@ exports.update = (req, res) => {
 // Delete a Post with the specified id in the request
 exports.delete = (req, res) => {
 	const id = req.params.postId;
-	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
-
-	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+	const jwtUserId = jwt.getUserId(req.headers.authorization);
 
 	models.Post.findOne({
 		attributes: ['id', 'userId'],

@@ -1,4 +1,5 @@
 // Imports
+const jwt = require('./utils/jwt');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -45,6 +46,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(hpp()); // HPP middleware to protect against HTTP parameter pollution attacks
 
 // Setting routes
+app.use('*', (req, res) => {
+	const jwtUserId = jwt.getUserId(req.headers.authorization);
+
+	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+});
+
 app.use('/users', users);
 app.use('/posts', posts);
 // app.use('/api/comments', comments);

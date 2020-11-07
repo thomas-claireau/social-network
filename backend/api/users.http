@@ -16,7 +16,7 @@ POST {{url}}/users
 Content-Type: application/json
 
 {
-	"email": "j.delatour@gmail.com",
+	"email": "jf.delatour@gmail.com",
 	"password": "password",
 	"firstname": "Jean",
 	"lastname": "Delatour",

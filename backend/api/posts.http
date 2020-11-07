@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
 	"title": "Titre du post 2",
-	"slug": "title-4",
+	"slug": "title-40",
 	"content": "Contenu du post"
 }
 

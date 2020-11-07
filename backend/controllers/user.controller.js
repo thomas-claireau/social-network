@@ -14,21 +14,21 @@ exports.create = (req, res) => {
 			res.status(409).json({
 				error: "L'email utilisé correspond déja a un compte existant",
 			});
-		}
-
-		bcrypt.hash(userBody.password, 10, function(err, bcryptPassword) {
-			models.User.create({ ...userBody, password: bcryptPassword })
-				.then((user) => {
-					res.status(200).json({
-						userId: user.dataValues.id,
-						token: jwt.generateToken(user.dataValues),
-						isAdmin: user.dataValues.isAdmin,
+		} else {
+			bcrypt.hash(userBody.password, 10, function(err, bcryptPassword) {
+				models.User.create({ ...userBody, password: bcryptPassword })
+					.then((user) => {
+						res.status(201).json({
+							userId: user.dataValues.id,
+							token: jwt.generateToken(user.dataValues),
+							isAdmin: user.dataValues.isAdmin,
+						});
+					})
+					.catch((err) => {
+						res.status(501).json({ err });
 					});
-				})
-				.catch((err) => {
-					res.status(501).json({ err });
-				});
-		});
+			});
+		}
 	});
 };
 
@@ -59,18 +59,24 @@ exports.update = (req, res) => {
 
 // Delete a User with the specified userId in the request
 exports.delete = (req, res, next) => {
-	const userId = jwt.getUserId(req.headers.authorization);
+	const id = req.params.userId;
+	const jwtUserId = jwt.getUserId(req.headers.authorization);
 
 	models.User.findOne({
-		where: { id: userId },
+		attributes: ['id'],
+		where: { id: id },
 	})
 		.then((user) => {
-			if (!user) {
-				res.status(401).json({ error: 'Veuillez vous connecter !' });
-			}
+			// si pas de user -> return 404
+			if (!user) return res.status(404).json({ error: 'Pas de user à supprimer' });
+
+			if (user.dataValues.id != jwtUserId)
+				return res
+					.status(401)
+					.json({ error: "Vous n'êtes pas autorisé à supprimer ce user" });
 
 			models.User.destroy({
-				where: { id: user.id },
+				where: { id: id },
 			})
 				.then(() => res.end())
 				.catch((err) => console.log(err));
