@@ -46,7 +46,7 @@ app.use(hpp()); // HPP middleware to protect against HTTP parameter pollution at
 
 // Setting routes
 app.use('/users', users);
-// app.use('/api/posts', posts);
+app.use('/posts', posts);
 // app.use('/api/comments', comments);
 
 // Exporting module

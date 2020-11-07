@@ -8,7 +8,7 @@ GET {{url}}/posts
 
 ###
 
-GET {{url}}/posts/fd
+GET {{url}}/posts/1
 
 ###
 
@@ -16,10 +16,9 @@ POST {{url}}/posts
 Content-Type: application/json
 
 {
-	"userId": 1,
 	"title": "Titre du post 2",
-	"content": "Contenu du post",
-	"createdAt": "2020-11-03 09:22:06"
+	"slug": "title-4",
+	"content": "Contenu du post"
 }
 
 ###
@@ -29,6 +28,7 @@ Content-Type: application/json
 
 {
 	"title": "Titre du post modifié",
+	"slug": "title-6",
 	"content": "Contenu du post"
 }
 

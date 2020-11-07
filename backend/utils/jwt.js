@@ -10,13 +10,15 @@ module.exports = {
 		);
 	},
 	getUserId: function(data) {
-		if (data !== null) {
+		if (data) {
 			try {
 				const token = jwt.verify(data.split(' ')[1], 'process.env.JWT_SECRET_TOKEN');
 				return token.userId;
 			} catch (err) {
 				return err;
 			}
+		} else {
+			return null;
 		}
 	},
 };

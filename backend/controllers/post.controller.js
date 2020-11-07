@@ -1,32 +1,49 @@
 const models = require('../models');
+const jwt = require('../utils/jwt');
 
 // Create and Save a new Post
 exports.create = (req, res) => {
-	if (!req.body) {
-		res.status(400).send({
-			message: 'Content can not be empty !',
-		});
+	const postBody = req.body;
+	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
 
-		return;
-	}
+	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
 
-	// create a post
-	const post = new Post({ ...req.body });
+	models.Post.findOne({
+		attributes: ['slug', 'userId'],
+		where: { slug: postBody.slug },
+	}).then((post) => {
+		if (post)
+			return res.status(409).json({ error: 'Ce slug est déja utilisé sur un autre article' });
 
-	// save post in DB
-	Post.create(post, (err, data) => {
-		if (err) {
-			res.status(err.code).send({
-				message: err.message || 'Some error occurred while creating the Post',
+		const date = new Date();
+
+		models.Post.create({
+			...postBody,
+			UserId: jwtUserId,
+			createdAt: date,
+			updatedAt: date,
+		})
+			.then((post) => {
+				res.status(201).json({
+					userId: post.dataValues.UserId,
+					title: post.dataValues.title,
+					slug: post.dataValues.slug,
+					content: post.dataValues.content,
+					createdAt: post.dataValues.createdAt,
+				});
+			})
+			.catch((err) => {
+				res.status(501).json({ err });
 			});
-		} else {
-			res.status(201).send(data);
-		}
 	});
 };
 
 // Retrieve all Posts from the database.
 exports.findAll = (req, res) => {
+	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
+
+	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+
 	models.Post.findAll({
 		include: [
 			{
@@ -37,7 +54,7 @@ exports.findAll = (req, res) => {
 		order: [['createdAt', 'DESC']],
 	})
 		.then((posts) => {
-			if (posts.length > null) {
+			if (posts.length > 0) {
 				res.status(200).json(posts);
 			} else {
 				res.status(404).json({ error: 'Pas de post à afficher' });
@@ -48,57 +65,98 @@ exports.findAll = (req, res) => {
 
 // Find a single Post with a postId
 exports.findOne = (req, res) => {
-	Post.findById(req.params.postId, (err, data) => {
-		let message = null;
+	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
 
-		if (err) {
-			if (err.code === 404) {
-				message = `Not found Post with id ${req.params.postId}`;
+	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+
+	models.Post.findOne({
+		attributes: ['id', 'userId', 'title', 'slug', 'content', 'createdAt', 'updatedAt'],
+		where: { id: req.params.postId },
+	})
+		.then((post) => {
+			if (post) {
+				return res.status(200).json(post);
 			} else {
-				message = `Error retrieving Post with id ${req.params.postId}`;
+				res.status(404).json({ error: 'Pas de post à afficher' });
 			}
-
-			res.status(err.code).send({ message });
-		} else {
-			res.send(data);
-		}
-	});
+		})
+		.catch((error) => res.status(500).json(error));
 };
 
 // Update a Post identified by the postId in the request
 exports.update = (req, res) => {
-	Post.updateById(req.params.postId, req.body, (err, data) => {
-		if (err) {
-			if (err.kind === 'not_found') {
-				res.status(404).send({
-					message: `Not found Post with id ${res.params.postId}`,
-				});
-			} else {
-				res.status(500).send({
-					message: `Error retrieving Post with id ${req.params.postId}`,
-				});
-			}
-		} else {
-			res.send(data);
-		}
-	});
+	const postBody = req.body;
+	const id = req.params.postId;
+	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
+
+	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+
+	models.Post.findOne({
+		attributes: ['id', 'slug', 'userId'],
+		where: { id: id },
+	})
+		.then((post) => {
+			// si pas de post -> return 404
+			if (!post) return res.status(404).json({ error: 'Pas de post à modifier' });
+
+			// non autorisé par jwt
+			if (post.dataValues.userId != jwtUserId)
+				return res
+					.status(401)
+					.json({ error: "Vous n'êtes pas autorisé à modifier ce post" });
+
+			models.Post.findOne({
+				attributes: ['id', 'slug'],
+				where: { slug: postBody.slug },
+			})
+				.then((item) => {
+					// si slug a modifié = a un autre -> return 409 conflit
+					if (item && item.dataValues.id != id)
+						return res
+							.status(409)
+							.json({ error: 'Ce slug est déja utilisé sur un autre article' });
+
+					models.Post.update(
+						{
+							...postBody,
+							updatedAt: new Date(),
+						},
+						{ where: { id: id } }
+					)
+						.then((post) => res.status(200).json({ message: 'Post modifié' }))
+						.catch((err) => res.status(500).json(err));
+				})
+				.catch((err) => res.status(500).json(err));
+		})
+		.catch((err) => res.status(500).json(err));
 };
 
-// Delete a Post with the specified postId in the request
+// Delete a Post with the specified id in the request
 exports.delete = (req, res) => {
-	Post.remove(req.params.postId, (err, data) => {
-		if (err) {
-			if (err.kind === 'not_found') {
-				res.status(404).send({
-					message: `Not found Post with id ${res.params.postId}`,
-				});
-			} else {
-				res.status(500).send({
-					message: `Error retrieving Post with id ${req.params.postId}`,
-				});
-			}
-		} else {
-			res.send({ message: `Post ${req.params.postId} deleted` });
-		}
-	});
+	const id = req.params.postId;
+	const jwtUserId = jwt.getUserId(req.headers.authorization); // TODO
+
+	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+
+	models.Post.findOne({
+		attributes: ['id', 'userId'],
+		where: { id: id },
+	})
+		.then((post) => {
+			// si pas de post -> return 404
+			if (!post) return res.status(404).json({ error: 'Pas de post à supprimer' });
+
+			// non autorisé par jwt
+			if (post.dataValues.userId != jwtUserId)
+				return res
+					.status(401)
+					.json({ error: "Vous n'êtes pas autorisé à supprimer ce post" });
+
+			models.Post.destroy({
+				where: { id: id },
+			})
+				.then(() => res.status(204).end())
+				.catch((err) => console.log(err));
+		})
+		.catch((err) => res.status(500).json(err));
 };
