@@ -1,18 +1,18 @@
 ###
 
-GET http://localhost:3000
+GET {{url}}
 
 ###
 
-GET http://localhost:3000/users
+GET {{url}}/users
 
 ###
 
-GET http://localhost:3000/users/1
+GET {{url}}/users/1
 
 ###
 
-POST http://localhost:3000/users
+POST {{url}}/users
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:3000/users/2
+PUT {{url}}/users/2
 Content-Type: application/json
 
 {
@@ -43,4 +43,4 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:3000/users/5
+DELETE {{url}}/users/5
