@@ -5,6 +5,9 @@
 		"database": "dev_social_network",
 		"host": "127.0.0.1",
 		"dialect": "mysql",
+		"dialectOptions": {
+			"timezone": "local"
+		},
 		"timezone": "Europe/Paris"
 	},
 	"test": {
@@ -13,6 +16,9 @@
 		"database": "database_test",
 		"host": "127.0.0.1",
 		"dialect": "mysql",
+		"dialectOptions": {
+			"timezone": "local"
+		},
 		"timezone": "Europe/Paris"
 	},
 	"production": {
@@ -21,6 +27,9 @@
 		"database": "database_production",
 		"host": "127.0.0.1",
 		"dialect": "mysql",
+		"dialectOptions": {
+			"timezone": "local"
+		},
 		"timezone": "Europe/Paris"
 	}
 }
