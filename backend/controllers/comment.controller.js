@@ -24,7 +24,7 @@ exports.findAll = (req, res) => {
 				res.status(404).json({ error: 'Pas de commentaire à afficher' });
 			}
 		})
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(501).json(err));
 };
 
 // Retrieve all Comments by postId from the database
@@ -51,7 +51,7 @@ exports.findAllByPost = (req, res) => {
 				res.status(404).json({ error: 'Pas de commentaire à afficher' });
 			}
 		})
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(501).json(err));
 };
 
 // Find a single Comment with a commentId
@@ -90,38 +90,44 @@ exports.create = (req, res) => {
 	models.User.findOne({
 		where: { id: jwtUserId },
 		attributes: ['id'],
-	}).then((user) => {
-		if (!user)
-			return res
-				.status(401)
-				.json({ error: 'Merci de vous connecter pour ajouter ce commentaire' });
+	})
+		.then((user) => {
+			if (!user)
+				return res
+					.status(401)
+					.json({ error: 'Merci de vous connecter pour ajouter ce commentaire' });
 
-		// check post
-		models.Post.findOne({
-			where: { id: commentBody.PostId },
-		}).then((post) => {
-			if (!post)
-				return res.status(401).json({ error: "Aucun article n'est lié à ce commentaire" });
-
-			// if ok : create comment
-			models.Comment.create({
-				...commentBody,
-				UserId: user.id,
-				createdAt: date,
-				updatedAt: date,
+			// check post
+			models.Post.findOne({
+				where: { id: commentBody.PostId },
 			})
-				.then((comment) => {
-					res.status(201).json({
-						user: user.dataValues.username,
-						post: post.dataValues.title,
-						content: comment.dataValues.content,
-					});
+				.then((post) => {
+					if (!post)
+						return res
+							.status(401)
+							.json({ error: "Aucun article n'est lié à ce commentaire" });
+
+					// if ok : create comment
+					models.Comment.create({
+						...commentBody,
+						UserId: user.id,
+						createdAt: date,
+						updatedAt: date,
+					})
+						.then((comment) => {
+							res.status(201).json({
+								user: user.dataValues.username,
+								post: post.dataValues.title,
+								content: comment.dataValues.content,
+							});
+						})
+						.catch((err) => {
+							res.status(501).json({ err });
+						});
 				})
-				.catch((err) => {
-					res.status(501).json({ err });
-				});
-		});
-	});
+				.catch((err) => res.status(501).json(err));
+		})
+		.catch((err) => res.status(501).json(err));
 };
 
 // Update a Comment identified by the commentId in the request
@@ -134,27 +140,29 @@ exports.update = (req, res) => {
 	models.Comment.findOne({
 		attributes: ['id', 'postId', 'userId'],
 		where: { id: id },
-	}).then((comment) => {
-		if (!comment) return res.status(404).json({ err: "Aucun commentaire n'a été trouvé" });
+	})
+		.then((comment) => {
+			if (!comment) return res.status(404).json({ err: "Aucun commentaire n'a été trouvé" });
 
-		// check jwt user with comment's user
-		if (comment.dataValues.userId != jwtUserId)
-			return res
-				.status(401)
-				.json({ err: "Vous n'etes pas autorisé à modifier ce commentaire" });
+			// check jwt user with comment's user
+			if (comment.dataValues.userId != jwtUserId)
+				return res
+					.status(401)
+					.json({ err: "Vous n'etes pas autorisé à modifier ce commentaire" });
 
-		models.Comment.update(
-			{
-				...commentBody,
-				updatedAt: new Date(),
-			},
-			{
-				where: { id: id },
-			}
-		)
-			.then(() => res.status(200).json({ message: 'Commentaire modifié' }))
-			.catch((err) => res.status(500).json(err));
-	});
+			models.Comment.update(
+				{
+					...commentBody,
+					updatedAt: new Date(),
+				},
+				{
+					where: { id: id },
+				}
+			)
+				.then(() => res.status(200).json({ message: 'Commentaire modifié' }))
+				.catch((err) => res.status(501).json(err));
+		})
+		.catch((err) => res.status(501).json(err));
 };
 
 // Delete a Comment with the specified id in the request
@@ -178,7 +186,7 @@ exports.delete = (req, res) => {
 
 			models.Comment.destroy({ where: { id: id } })
 				.then(() => res.status(204).end())
-				.catch((err) => console.log(err));
+				.catch((err) => res.status(501).json(err));
 		})
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(501).json(err));
 };

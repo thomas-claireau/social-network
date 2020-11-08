@@ -9,31 +9,33 @@ exports.create = (req, res) => {
 	models.Post.findOne({
 		attributes: ['slug', 'userId'],
 		where: { slug: postBody.slug },
-	}).then((post) => {
-		if (post)
-			return res.status(409).json({ error: 'Ce slug est déja utilisé sur un autre article' });
+	})
+		.then((post) => {
+			if (post)
+				return res
+					.status(409)
+					.json({ error: 'Ce slug est déja utilisé sur un autre article' });
 
-		const date = new Date();
+			const date = new Date();
 
-		models.Post.create({
-			...postBody,
-			UserId: jwtUserId,
-			createdAt: date,
-			updatedAt: date,
-		})
-			.then((post) => {
-				res.status(201).json({
-					userId: post.dataValues.UserId,
-					title: post.dataValues.title,
-					slug: post.dataValues.slug,
-					content: post.dataValues.content,
-					createdAt: post.dataValues.createdAt,
-				});
+			models.Post.create({
+				...postBody,
+				UserId: jwtUserId,
+				createdAt: date,
+				updatedAt: date,
 			})
-			.catch((err) => {
-				res.status(501).json({ err });
-			});
-	});
+				.then((post) => {
+					res.status(201).json({
+						userId: post.dataValues.UserId,
+						title: post.dataValues.title,
+						slug: post.dataValues.slug,
+						content: post.dataValues.content,
+						createdAt: post.dataValues.createdAt,
+					});
+				})
+				.catch((err) => res.status(501).json(err));
+		})
+		.catch((err) => res.status(501).json(err));
 };
 
 // Retrieve all Posts from the database.
@@ -54,7 +56,7 @@ exports.findAll = (req, res) => {
 				res.status(404).json({ error: 'Pas de post à afficher' });
 			}
 		})
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(501).json(err));
 };
 
 // Retrieve all Posts by userId from the database
@@ -76,7 +78,7 @@ exports.findAllByUser = (req, res) => {
 				res.status(404).json({ error: "Pas d'article à afficher" });
 			}
 		})
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(501).json(err));
 };
 
 // Find a single Post with a postId
@@ -134,11 +136,11 @@ exports.update = (req, res) => {
 						{ where: { id: id } }
 					)
 						.then((post) => res.status(200).json({ message: 'Post modifié' }))
-						.catch((err) => res.status(500).json(err));
+						.catch((err) => res.status(501).json(err));
 				})
-				.catch((err) => res.status(500).json(err));
+				.catch((err) => res.status(501).json(err));
 		})
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(501).json(err));
 };
 
 // Delete a Post with the specified id in the request
@@ -164,7 +166,7 @@ exports.delete = (req, res) => {
 				where: { id: id },
 			})
 				.then(() => res.status(204).end())
-				.catch((err) => console.log(err));
+				.catch((err) => res.status(501).json(err));
 		})
-		.catch((err) => res.status(500).json(err));
+		.catch((err) => res.status(501).json(err));
 };
