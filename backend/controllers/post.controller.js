@@ -14,7 +14,7 @@ exports.create = (req, res) => {
 			if (post)
 				return res
 					.status(409)
-					.json({ error: 'Ce slug est déja utilisé sur un autre article' });
+					.json({ message: 'Ce slug est déja utilisé sur un autre article' });
 
 			const date = new Date();
 
@@ -50,7 +50,8 @@ exports.findAll = (req, res) => {
 		order: [['updatedAt', 'DESC']],
 	})
 		.then((posts) => {
-			if (posts.length <= 0) return res.status(404).json({ error: 'Pas de post à afficher' });
+			if (posts.length <= 0)
+				return res.status(404).json({ message: 'Pas de post à afficher' });
 
 			return res.status(200).json(posts);
 		})
@@ -85,7 +86,7 @@ exports.findOne = (req, res) => {
 		where: { id: req.params.postId },
 	})
 		.then((post) => {
-			if (!post) return res.status(404).json({ error: 'Pas de post à afficher' });
+			if (!post) return res.status(404).json({ message: 'Pas de post à afficher' });
 
 			return res.status(200).json(post);
 		})
@@ -104,7 +105,7 @@ exports.update = (req, res) => {
 	})
 		.then((post) => {
 			// si pas de post -> return 404
-			if (!post) return res.status(404).json({ error: 'Pas de post à modifier' });
+			if (!post) return res.status(404).json({ message: 'Pas de post à modifier' });
 
 			// non autorisé par jwt
 			if (post.dataValues.userId != jwtUserId)
@@ -121,7 +122,7 @@ exports.update = (req, res) => {
 					if (item && item.dataValues.id != id)
 						return res
 							.status(409)
-							.json({ error: 'Ce slug est déja utilisé sur un autre article' });
+							.json({ message: 'Ce slug est déja utilisé sur un autre article' });
 
 					models.Post.update(
 						{
@@ -149,7 +150,7 @@ exports.delete = (req, res) => {
 	})
 		.then((post) => {
 			// si pas de post -> return 404
-			if (!post) return res.status(404).json({ error: 'Pas de post à supprimer' });
+			if (!post) return res.status(404).json({ message: 'Pas de post à supprimer' });
 
 			// non autorisé par jwt
 			if (post.dataValues.userId != jwtUserId)

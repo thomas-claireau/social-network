@@ -49,7 +49,7 @@ app.use(hpp()); // HPP middleware to protect against HTTP parameter pollution at
 // app.use('*', (req, res) => {
 // 	const jwtUserId = jwt.getUserId(req.headers.authorization);
 
-// 	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+// 	if (!jwtUserId) return res.status(401).json({ message: 'Veuillez vous connecter' });
 // });
 
 // Setting routes

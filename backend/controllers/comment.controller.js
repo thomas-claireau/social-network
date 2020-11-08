@@ -19,7 +19,7 @@ exports.findAll = (req, res) => {
 	})
 		.then((comments) => {
 			if (comments.length <= 0)
-				return res.status(404).json({ error: 'Pas de commentaire à afficher' });
+				return res.status(404).json({ message: 'Pas de commentaire à afficher' });
 
 			return res.status(200).json(comments);
 		})
@@ -45,7 +45,7 @@ exports.findAllByPost = (req, res) => {
 	})
 		.then((comments) => {
 			if (comments.length <= 0)
-				return res.status(404).json({ error: 'Pas de commentaire à afficher' });
+				return res.status(404).json({ message: 'Pas de commentaire à afficher' });
 
 			return res.status(200).json(comments);
 		})
@@ -69,7 +69,7 @@ exports.findOne = (req, res) => {
 		where: { id: req.params.commentId },
 	})
 		.then((comment) => {
-			if (!comment) return res.status(404).json({ error: 'Pas de commentaire à afficher' });
+			if (!comment) return res.status(404).json({ message: 'Pas de commentaire à afficher' });
 
 			return res.status(200).json(comment);
 		})
@@ -91,7 +91,7 @@ exports.create = (req, res) => {
 			if (!user)
 				return res
 					.status(401)
-					.json({ error: 'Merci de vous connecter pour ajouter ce commentaire' });
+					.json({ message: 'Merci de vous connecter pour ajouter ce commentaire' });
 
 			// check post
 			models.Post.findOne({
@@ -172,7 +172,8 @@ exports.delete = (req, res) => {
 	})
 		.then((comment) => {
 			// si pas de commentaire -> return 404
-			if (!comment) return res.status(404).json({ error: 'Pas de commentaire à supprimer' });
+			if (!comment)
+				return res.status(404).json({ message: 'Pas de commentaire à supprimer' });
 
 			// non autorisé par jwt
 			if (comment.dataValues.userId != jwtUserId)

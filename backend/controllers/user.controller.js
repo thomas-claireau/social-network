@@ -14,7 +14,7 @@ exports.create = (req, res) => {
 			if (user)
 				return res
 					.status(409)
-					.json({ error: "L'email utilisé correspond déja a un compte existant" });
+					.json({ message: "L'email utilisé correspond déja a un compte existant" });
 
 			models.User.findOne({
 				attributes: ['username'],
@@ -23,7 +23,7 @@ exports.create = (req, res) => {
 				.then((user) => {
 					if (user)
 						return res.status(409).json({
-							error: 'Le username utilisé correspond déja a un compte existant',
+							message: 'Le username utilisé correspond déja a un compte existant',
 						});
 
 					bcrypt.hash(userBody.password, 10, function(err, bcryptPassword) {
@@ -48,7 +48,12 @@ exports.findAll = (req, res) => {
 	models.User.findAll({
 		attributes: ['email', 'firstname', 'lastname', 'username', 'isAdmin', 'biography'],
 	})
-		.then((users) => res.status(200).json(users))
+		.then((users) => {
+			if (users.length <= 0)
+				return res.status(404).json({ message: "Aucun utilisateur n'a été trouvé" });
+
+			return res.status(200).json(users);
+		})
 		.catch((err) => res.status(501).json(err));
 };
 
@@ -58,7 +63,11 @@ exports.findOne = (req, res) => {
 		attributes: ['id', 'email', 'firstname', 'lastname', 'username', 'isAdmin', 'biography'],
 		where: { id: req.params.userId },
 	})
-		.then((user) => res.status(200).json(user))
+		.then((user) => {
+			if (!user) return res.status(404).json({ message: "Aucun utilisateur n'a été trouvé" });
+
+			return res.status(200).json(user);
+		})
 		.catch((err) => res.status(501).json(err));
 };
 
@@ -74,7 +83,7 @@ exports.update = (req, res) => {
 	})
 		.then((user) => {
 			// si pas de user -> return 404
-			if (!user) return res.status(404).json({ error: 'Pas de user à modifier' });
+			if (!user) return res.status(404).json({ message: 'Pas de user à modifier' });
 
 			// non autorisé par jwt
 			if (user.dataValues.id != jwtUserId)
@@ -91,7 +100,7 @@ exports.update = (req, res) => {
 					if (item && item.dataValues.id != id)
 						return res
 							.status(409)
-							.json({ error: 'Cet email est déja utilisé sur un autre user' });
+							.json({ message: 'Cet email est déja utilisé sur un autre user' });
 
 					models.User.findOne({
 						attributes: ['id'],
@@ -101,7 +110,7 @@ exports.update = (req, res) => {
 							// si username a modifié = a un autre -> return 409 conflit
 							if (item && item.dataValues.id != id)
 								return res.status(409).json({
-									error: 'Ce username est déja utilisé sur un autre user',
+									message: 'Ce username est déja utilisé sur un autre user',
 								});
 
 							const objUser = {
@@ -154,7 +163,7 @@ exports.delete = (req, res, next) => {
 	})
 		.then((user) => {
 			// si pas de user -> return 404
-			if (!user) return res.status(404).json({ error: 'Pas de user à supprimer' });
+			if (!user) return res.status(404).json({ message: 'Pas de user à supprimer' });
 
 			if (user.dataValues.id != jwtUserId)
 				return res
