@@ -57,6 +57,28 @@ exports.findAll = (req, res) => {
 		.catch((err) => res.status(500).json(err));
 };
 
+// Retrieve all Posts by userId from the database
+exports.findAllByUser = (req, res) => {
+	models.Post.findAll({
+		include: [
+			{
+				model: models.User,
+				attributes: ['username'],
+			},
+		],
+		where: { userId: req.params.userId },
+		order: [['createdAt', 'DESC']],
+	})
+		.then((posts) => {
+			if (posts.length > 0) {
+				res.status(200).json(posts);
+			} else {
+				res.status(404).json({ error: "Pas d'article à afficher" });
+			}
+		})
+		.catch((err) => res.status(500).json(err));
+};
+
 // Find a single Post with a postId
 exports.findOne = (req, res) => {
 	models.Post.findOne({
