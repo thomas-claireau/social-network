@@ -8,6 +8,10 @@ GET {{url}}/posts
 
 ###
 
+GET {{url}}/posts/user/1
+
+###
+
 GET {{url}}/posts/1
 
 ###

@@ -11,7 +11,7 @@ const hpp = require('hpp');
 // Routes Imports
 const users = require('./routes/user.route');
 const posts = require('./routes/post.route');
-// const comments = require('./routes/comment.route');
+const comments = require('./routes/comment.route');
 
 // Express app launching
 const app = express();
@@ -45,16 +45,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Security
 app.use(hpp()); // HPP middleware to protect against HTTP parameter pollution attacks
 
-// Setting routes
+// Authorization
 // app.use('*', (req, res) => {
 // 	const jwtUserId = jwt.getUserId(req.headers.authorization);
 
 // 	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
 // });
 
+// Setting routes
 app.use('/users', users);
 app.use('/posts', posts);
-// app.use('/api/comments', comments);
+app.use('/comments', comments);
 
 // Exporting module
 module.exports = app;
