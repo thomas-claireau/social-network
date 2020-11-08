@@ -16,7 +16,7 @@ POST {{url}}/users
 Content-Type: application/json
 
 {
-	"email": "jf.delatour@gmail.com",
+	"email": "jfd.delatour@gmail.com",
 	"password": "password",
 	"firstname": "Jean",
 	"lastname": "Delatour",
@@ -27,20 +27,19 @@ Content-Type: application/json
 
 ###
 
-PUT {{url}}/users/2
+PUT {{url}}/users/11
 Content-Type: application/json
 
 {
 	"email": "j.delatour@gmail.com",
-	"password": "password",
-	"newPassword": "password2",
+	"newPassword": "fd",
 	"firstname": "Jean",
 	"lastname": "Delatour",
 	"username": "thisisjean",
-	"biography": "lorem ipsum 2",
+	"biography": "lorem ipsum 3",
 	"isAdmin": false
 }
 
 ###
 
-DELETE {{url}}/users/5
+DELETE {{url}}/users/2

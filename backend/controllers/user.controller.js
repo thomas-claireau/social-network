@@ -10,11 +10,20 @@ exports.create = (req, res) => {
 		attributes: ['email'],
 		where: { email: userBody.email },
 	}).then((user) => {
-		if (user) {
-			res.status(409).json({
-				error: "L'email utilisé correspond déja a un compte existant",
-			});
-		} else {
+		if (user)
+			return res
+				.status(409)
+				.json({ error: "L'email utilisé correspond déja a un compte existant" });
+
+		models.User.findOne({
+			attributes: ['username'],
+			where: { username: userBody.username },
+		}).then((user) => {
+			if (user)
+				return res
+					.status(409)
+					.json({ error: 'Le username utilisé correspond déja a un compte existant' });
+
 			bcrypt.hash(userBody.password, 10, function(err, bcryptPassword) {
 				models.User.create({ ...userBody, password: bcryptPassword })
 					.then((user) => {
@@ -28,7 +37,7 @@ exports.create = (req, res) => {
 						res.status(501).json({ err });
 					});
 			});
-		}
+		});
 	});
 };
 
@@ -54,7 +63,80 @@ exports.findOne = (req, res) => {
 // Update a User identified by the userId in the request
 exports.update = (req, res) => {
 	const userBody = req.body;
-	const userId = req.headers.authorization ? jwt.getUserId(req.headers.authorization) : false;
+	const id = req.params.userId;
+	const jwtUserId = jwt.getUserId(req.headers.authorization);
+
+	models.User.findOne({
+		attributes: ['id'],
+		where: { id: id },
+	})
+		.then((user) => {
+			// si pas de user -> return 404
+			if (!user) return res.status(404).json({ error: 'Pas de user à modifier' });
+
+			// non autorisé par jwt
+			if (user.dataValues.id != jwtUserId)
+				return res
+					.status(401)
+					.json({ error: "Vous n'êtes pas autorisé à modifier ce user" });
+
+			models.User.findOne({
+				attributes: ['id'],
+				where: { email: userBody.email },
+			})
+				.then((item) => {
+					// si email a modifié = a un autre -> return 409 conflit
+					if (item && item.dataValues.id != id)
+						return res
+							.status(409)
+							.json({ error: 'Cet email est déja utilisé sur un autre user' });
+
+					models.User.findOne({
+						attributes: ['id'],
+						where: { username: userBody.username },
+					}).then((item) => {
+						// si username a modifié = a un autre -> return 409 conflit
+						if (item && item.dataValues.id != id)
+							return res
+								.status(409)
+								.json({ error: 'Ce username est déja utilisé sur un autre user' });
+
+						const objUser = {
+							email: req.body.email,
+							firstname: req.body.firstname,
+							lastname: req.body.lastname,
+							username: req.body.username,
+							biography: req.body.biography,
+							isAdmin: req.body.isAdmin,
+						};
+
+						if (req.body.newPassword) {
+							bcrypt.hash(req.body.newPassword, 10, (err, bcryptNewPassword) => {
+								models.User.update(
+									{ ...objUser, password: bcryptNewPassword },
+									{ where: { id: user.id } }
+								)
+									.then(() =>
+										res.status(200).json({
+											message: 'Les modifications ont été enregistrées',
+										})
+									)
+									.catch((err) => res.status(500).json(err));
+							});
+						} else {
+							models.User.update({ ...objUser }, { where: { id: user.id } })
+								.then(() =>
+									res.status(200).json({
+										message: 'Les modifications ont été enregistrées',
+									})
+								)
+								.catch((err) => res.status(500).json(err));
+						}
+					});
+				})
+				.catch((err) => res.status(500).json(err));
+		})
+		.catch((err) => res.status(500).json(err));
 };
 
 // Delete a User with the specified userId in the request
@@ -78,7 +160,7 @@ exports.delete = (req, res, next) => {
 			models.User.destroy({
 				where: { id: id },
 			})
-				.then(() => res.end())
+				.then(() => res.status(204).end())
 				.catch((err) => console.log(err));
 		})
 		.catch((err) => res.status(500).json(err));

@@ -46,11 +46,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(hpp()); // HPP middleware to protect against HTTP parameter pollution attacks
 
 // Setting routes
-app.use('*', (req, res) => {
-	const jwtUserId = jwt.getUserId(req.headers.authorization);
+// app.use('*', (req, res) => {
+// 	const jwtUserId = jwt.getUserId(req.headers.authorization);
 
-	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
-});
+// 	if (!jwtUserId) return res.status(401).json({ error: 'Veuillez vous connecter' });
+// });
 
 app.use('/users', users);
 app.use('/posts', posts);
