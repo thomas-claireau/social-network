@@ -15,7 +15,7 @@ exports.findAll = (req, res) => {
 				attributes: ['title'],
 			},
 		],
-		order: [['createdAt', 'DESC']],
+		order: [['updatedAt', 'DESC']],
 	})
 		.then((comments) => {
 			if (comments.length > 0) {
@@ -42,7 +42,7 @@ exports.findAllByPost = (req, res) => {
 			},
 		],
 		where: { postId: req.params.postId },
-		order: [['createdAt', 'DESC']],
+		order: [['updatedAt', 'DESC']],
 	})
 		.then((comments) => {
 			if (comments.length > 0) {

@@ -45,7 +45,7 @@ exports.findAll = (req, res) => {
 				attributes: ['username'],
 			},
 		],
-		order: [['createdAt', 'DESC']],
+		order: [['updatedAt', 'DESC']],
 	})
 		.then((posts) => {
 			if (posts.length > 0) {
@@ -67,7 +67,7 @@ exports.findAllByUser = (req, res) => {
 			},
 		],
 		where: { userId: req.params.userId },
-		order: [['createdAt', 'DESC']],
+		order: [['updatedAt', 'DESC']],
 	})
 		.then((posts) => {
 			if (posts.length > 0) {
@@ -99,7 +99,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
 	const postBody = req.body;
 	const id = req.params.postId;
-	const jwtUserId = jwt.getUserId(req.headers.authorization);
+	const jwtUserId = jwt.getUserId(req.headers.authorization) || 1; // TODO
 
 	models.Post.findOne({
 		attributes: ['id', 'slug', 'userId'],
