@@ -32,7 +32,7 @@ Content-Type: application/json
 
 {
 	"title": "Titre du post modifié",
-	"slug": "title-6",
+	"slug": "title-3",
 	"content": "Contenu du post"
 }
 

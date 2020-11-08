@@ -18,11 +18,10 @@ exports.findAll = (req, res) => {
 		order: [['updatedAt', 'DESC']],
 	})
 		.then((comments) => {
-			if (comments.length > 0) {
-				res.status(200).json(comments);
-			} else {
-				res.status(404).json({ error: 'Pas de commentaire à afficher' });
-			}
+			if (comments.length <= 0)
+				return res.status(404).json({ error: 'Pas de commentaire à afficher' });
+
+			return res.status(200).json(comments);
 		})
 		.catch((err) => res.status(501).json(err));
 };
@@ -45,11 +44,10 @@ exports.findAllByPost = (req, res) => {
 		order: [['updatedAt', 'DESC']],
 	})
 		.then((comments) => {
-			if (comments.length > 0) {
-				res.status(200).json(comments);
-			} else {
-				res.status(404).json({ error: 'Pas de commentaire à afficher' });
-			}
+			if (comments.length <= 0)
+				return res.status(404).json({ error: 'Pas de commentaire à afficher' });
+
+			return res.status(200).json(comments);
 		})
 		.catch((err) => res.status(501).json(err));
 };
@@ -71,11 +69,9 @@ exports.findOne = (req, res) => {
 		where: { id: req.params.commentId },
 	})
 		.then((comment) => {
-			if (comment) {
-				return res.status(200).json(comment);
-			} else {
-				res.status(404).json({ error: 'Pas de commentaire à afficher' });
-			}
+			if (!comment) return res.status(404).json({ error: 'Pas de commentaire à afficher' });
+
+			return res.status(200).json(comment);
 		})
 		.catch((error) => res.status(500).json(error));
 };

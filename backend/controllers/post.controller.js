@@ -50,11 +50,9 @@ exports.findAll = (req, res) => {
 		order: [['updatedAt', 'DESC']],
 	})
 		.then((posts) => {
-			if (posts.length > 0) {
-				res.status(200).json(posts);
-			} else {
-				res.status(404).json({ error: 'Pas de post à afficher' });
-			}
+			if (posts.length <= 0) return res.status(404).json({ error: 'Pas de post à afficher' });
+
+			return res.status(200).json(posts);
 		})
 		.catch((err) => res.status(501).json(err));
 };
@@ -72,11 +70,10 @@ exports.findAllByUser = (req, res) => {
 		order: [['updatedAt', 'DESC']],
 	})
 		.then((posts) => {
-			if (posts.length > 0) {
-				res.status(200).json(posts);
-			} else {
-				res.status(404).json({ error: "Pas d'article à afficher" });
-			}
+			if (posts.length <= 0)
+				return res.status(404).json({ error: "Pas d'article à afficher" });
+
+			return res.status(200).json(posts);
 		})
 		.catch((err) => res.status(501).json(err));
 };
@@ -88,11 +85,9 @@ exports.findOne = (req, res) => {
 		where: { id: req.params.postId },
 	})
 		.then((post) => {
-			if (post) {
-				return res.status(200).json(post);
-			} else {
-				res.status(404).json({ error: 'Pas de post à afficher' });
-			}
+			if (!post) return res.status(404).json({ error: 'Pas de post à afficher' });
+
+			return res.status(200).json(post);
 		})
 		.catch((error) => res.status(500).json(error));
 };
