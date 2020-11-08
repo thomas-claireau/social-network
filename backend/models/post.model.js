@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 			});
 		}
 	}
+
 	Post.init(
 		{
 			userId: DataTypes.INTEGER,
@@ -30,5 +31,6 @@ module.exports = (sequelize, DataTypes) => {
 			modelName: 'Post',
 		}
 	);
+
 	return Post;
 };
