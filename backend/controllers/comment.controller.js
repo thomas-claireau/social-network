@@ -101,7 +101,7 @@ exports.create = (req, res) => {
 					if (!post)
 						return res
 							.status(401)
-							.json({ error: "Aucun article n'est lié à ce commentaire" });
+							.json({ message: "Aucun article n'est lié à ce commentaire" });
 
 					// if ok : create comment
 					models.Comment.create({
@@ -179,7 +179,7 @@ exports.delete = (req, res) => {
 			if (comment.dataValues.userId != jwtUserId)
 				return res
 					.status(401)
-					.json({ error: "Vous n'êtes pas autorisé à supprimer ce commentaire" });
+					.json({ message: "Vous n'êtes pas autorisé à supprimer ce commentaire" });
 
 			models.Comment.destroy({ where: { id: id } })
 				.then(() => res.status(204).end())

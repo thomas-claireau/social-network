@@ -72,7 +72,7 @@ exports.findAllByUser = (req, res) => {
 	})
 		.then((posts) => {
 			if (posts.length <= 0)
-				return res.status(404).json({ error: "Pas d'article à afficher" });
+				return res.status(404).json({ message: "Pas d'article à afficher" });
 
 			return res.status(200).json(posts);
 		})
@@ -111,7 +111,7 @@ exports.update = (req, res) => {
 			if (post.dataValues.userId != jwtUserId)
 				return res
 					.status(401)
-					.json({ error: "Vous n'êtes pas autorisé à modifier ce post" });
+					.json({ message: "Vous n'êtes pas autorisé à modifier ce post" });
 
 			models.Post.findOne({
 				attributes: ['id', 'slug'],
@@ -156,7 +156,7 @@ exports.delete = (req, res) => {
 			if (post.dataValues.userId != jwtUserId)
 				return res
 					.status(401)
-					.json({ error: "Vous n'êtes pas autorisé à supprimer ce post" });
+					.json({ message: "Vous n'êtes pas autorisé à supprimer ce post" });
 
 			models.Post.destroy({
 				where: { id: id },

@@ -89,7 +89,7 @@ exports.update = (req, res) => {
 			if (user.dataValues.id != jwtUserId)
 				return res
 					.status(401)
-					.json({ error: "Vous n'êtes pas autorisé à modifier ce user" });
+					.json({ message: "Vous n'êtes pas autorisé à modifier ce user" });
 
 			models.User.findOne({
 				attributes: ['id'],
@@ -168,7 +168,7 @@ exports.delete = (req, res, next) => {
 			if (user.dataValues.id != jwtUserId)
 				return res
 					.status(401)
-					.json({ error: "Vous n'êtes pas autorisé à supprimer ce user" });
+					.json({ message: "Vous n'êtes pas autorisé à supprimer ce user" });
 
 			models.User.destroy({
 				where: { id: id },
