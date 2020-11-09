@@ -9,13 +9,13 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			models.postLikes.belongsTo(models.User, {
+			models.postDislikes.belongsTo(models.User, {
 				foreignKey: {
 					allowNull: false,
 				},
 			});
 
-			models.postLikes.belongsTo(models.Post, {
+			models.postDislikes.belongsTo(models.Post, {
 				foreignKey: {
 					allowNull: false,
 				},
@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
 		{
 			sequelize,
 			modelName: 'postDislikes',
+			tableName: 'posts__dislikes',
 		}
 	);
 	return postDislikes;

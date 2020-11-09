@@ -1,0 +1,16 @@
+###
+
+GET {{ url }}/dislikes/post/1
+
+###
+
+POST {{url}}/dislikes
+Content-Type: application/json
+
+{
+	"PostId": 1
+}
+
+###
+
+DELETE {{url}}/dislikes/12/1

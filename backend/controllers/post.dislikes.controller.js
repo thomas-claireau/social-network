@@ -1,9 +1,9 @@
 const models = require('../models');
 const jwt = require('../utils/jwt');
 
-// Create a new Like
+// Create a new disLike
 exports.create = (req, res) => {
-	const likeBody = req.body;
+	const dislikeBody = req.body;
 	const jwtUserId = jwt.getUserId(req.headers.authorization) || 2; // TODO
 	const date = new Date();
 
@@ -13,26 +13,28 @@ exports.create = (req, res) => {
 			if (!user)
 				return res
 					.status(401)
-					.json({ message: 'Veuillez vous connecter pour liker ce post' });
+					.json({ message: 'Veuillez vous connecter pour disliker ce post' });
 
 			// check post
-			models.Post.findOne({ where: { id: likeBody.PostId } })
+			models.Post.findOne({ where: { id: dislikeBody.PostId } })
 				.then((post) => {
 					if (!post)
 						return res.status(404).json({ message: "Aucun post n'a été trouvé" });
 
 					// check both
-					models.postLikes
+					models.postDislikes
 						.findOne({
-							where: { userId: jwtUserId, postId: likeBody.PostId },
+							where: { userId: jwtUserId, postId: dislikeBody.PostId },
 						})
 						.then((like) => {
 							if (like)
-								return res.status(409).json({ message: 'Le post a déja été liké' });
+								return res
+									.status(409)
+									.json({ message: 'Le post a déja été disliké' });
 
-							models.postLikes
+							models.postDislikes
 								.create({
-									...likeBody,
+									...dislikeBody,
 									UserId: jwtUserId,
 									createdAt: date,
 									updatedAt: date,
@@ -54,9 +56,9 @@ exports.create = (req, res) => {
 		.catch((err) => res.status(501).json(err));
 };
 
-// Retrieve all Likes by postId from the database
+// Retrieve all Dislikes by postId from the database
 exports.findAllByPost = (req, res) => {
-	models.postLikes
+	models.postDislikes
 		.findAll({
 			attributes: ['createdAt'],
 			include: [
@@ -72,39 +74,36 @@ exports.findAllByPost = (req, res) => {
 			where: { postId: req.params.postId },
 			order: [['createdAt', 'DESC']],
 		})
-		.then((likes) => {
-			if (likes.length <= 0)
-				return res.status(404).json({ message: 'Pas de like à afficher' });
+		.then((dislikes) => {
+			if (dislikes.length <= 0)
+				return res.status(404).json({ message: 'Pas de dislike à afficher' });
 
-			return res.status(200).json(likes);
+			return res.status(200).json(dislikes);
 		})
 		.catch((err) => res.status(501).json(err));
 };
 
-// Delete a Like with likeId
+// Delete a Dislike with dislikeId
 exports.delete = (req, res) => {
-	const id = req.params.likeId;
+	const id = req.params.dislikeId;
 	const jwtUserId = jwt.getUserId(req.headers.authorization) || 2; // TODO
 
-	models.postLikes
+	models.postDislikes
 		.findOne({ where: { id: id } })
-		.then((like) => {
-			// si pas de like -> return 404
-			if (!like) return res.status(404).json({ message: 'Pas de like à supprimer' });
-
+		.then((dislike) => {
+			// si pas de dislike -> return 404
+			if (!dislike) return res.status(404).json({ message: 'Pas de dislike à supprimer' });
 			// check user
-			if (like.dataValues.userId != jwtUserId)
+			if (dislike.dataValues.userId != jwtUserId)
 				return res
 					.status(401)
-					.json({ message: "Vous n'etes pas autorisé à supprimer ce like" });
-
+					.json({ message: "Vous n'etes pas autorisé à supprimer ce dislike" });
 			// check post
-			if (like.dataValues.postId != req.params.postId)
+			if (dislike.dataValues.postId != req.params.postId)
 				return res
 					.status(401)
-					.json({ message: "Vous n'êtes pas autorisé à supprimer ce like" });
-
-			models.postLikes
+					.json({ message: "Vous n'êtes pas autorisé à supprimer ce dislike" });
+			models.postDislikes
 				.destroy({ where: { id: id } })
 				.then(() => res.status(204).end())
 				.catch((err) => res.status(501).json(err));
