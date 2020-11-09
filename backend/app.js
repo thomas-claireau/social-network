@@ -14,6 +14,8 @@ const posts = require('./routes/post.route');
 const comments = require('./routes/comment.route');
 const postsLikes = require('./routes/post.likes.route');
 const postsDislikes = require('./routes/post.dislikes.route');
+const commentsLikes = require('./routes/comment.likes.route');
+const commentsDislikes = require('./routes/comment.dislikes.route');
 
 // Express app launching
 const app = express();
@@ -58,8 +60,10 @@ app.use(hpp()); // HPP middleware to protect against HTTP parameter pollution at
 app.use('/users', users);
 app.use('/posts', posts);
 app.use('/comments', comments);
-app.use('/likes', postsLikes);
-app.use('/dislikes', postsDislikes);
+app.use('/posts/likes', postsLikes);
+app.use('/posts/dislikes', postsDislikes);
+app.use('/comments/likes', commentsLikes);
+app.use('/comments/dislikes', commentsDislikes);
 
 // Exporting module
 module.exports = app;

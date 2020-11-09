@@ -1,10 +1,10 @@
 ###
 
-GET {{ url }}/likes/post/1
+GET {{ url }}/posts/likes/1
 
 ###
 
-POST {{url}}/likes
+POST {{url}}/posts/likes
 Content-Type: application/json
 
 {
@@ -13,4 +13,4 @@ Content-Type: application/json
 
 ###
 
-DELETE {{url}}/likes/13/1
+DELETE {{url}}/posts/likes/14/1

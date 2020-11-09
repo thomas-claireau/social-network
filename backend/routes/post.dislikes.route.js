@@ -6,7 +6,7 @@ const postsDislikes = require('../controllers/post.dislikes.controller');
 router.post('/', postsDislikes.create);
 
 // Retrieve all Dislikes by postId from the database
-router.get('/post/:postId', postsDislikes.findAllByPost);
+router.get('/:postId', postsDislikes.findAllByPost);
 
 // Delete a Dislike with likeId
 router.delete('/:dislikeId/:postId', postsDislikes.delete);

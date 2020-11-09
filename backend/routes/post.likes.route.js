@@ -6,7 +6,7 @@ const postsLikes = require('../controllers/post.likes.controller');
 router.post('/', postsLikes.create);
 
 // Retrieve all Likes by postId from the database
-router.get('/post/:postId', postsLikes.findAllByPost);
+router.get('/:postId', postsLikes.findAllByPost);
 
 // Delete a Like with likeId
 router.delete('/:likeId/:postId', postsLikes.delete);
