@@ -12,6 +12,8 @@ const hpp = require('hpp');
 const users = require('./routes/user.route');
 const posts = require('./routes/post.route');
 const comments = require('./routes/comment.route');
+const postsLikes = require('./routes/post.likes.route');
+// const postsDislikes = require('./routes/post.dislikes.route');
 
 // Express app launching
 const app = express();
@@ -56,6 +58,8 @@ app.use(hpp()); // HPP middleware to protect against HTTP parameter pollution at
 app.use('/users', users);
 app.use('/posts', posts);
 app.use('/comments', comments);
+app.use('/likes', postsLikes);
+// app.use('/dislikes', postsDislikes);
 
 // Exporting module
 module.exports = app;
