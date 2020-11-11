@@ -1,6 +1,6 @@
 <template>
   <div>
-    login
+    <SvgLoader url="img/icons/email" />
     <ImgLoader url="img/background-starter.jpg" />
   </div>
 </template>

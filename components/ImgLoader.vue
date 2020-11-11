@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-frag>
     <img :src="src" />
   </div>
 </template>
