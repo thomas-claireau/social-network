@@ -1,4 +1,4 @@
-# test-nuxt
+# frontend-social-network
 
 ## Build Setup
 
