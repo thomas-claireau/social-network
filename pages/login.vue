@@ -1,14 +1,7 @@
 <template>
   <div>
     login
-    <Field
-      tag="input"
-      id="email"
-      name="email"
-      type="text"
-      placeholder="Email"
-    />
-    <Field tag="input" type="submit" />
+    <ImgLoader url="img/background-starter.jpg" />
   </div>
 </template>
 
