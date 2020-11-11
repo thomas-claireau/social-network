@@ -1,0 +1,16 @@
+###
+
+GET {{ url }}/posts/likes/1
+
+###
+
+POST {{url}}/posts/likes
+Content-Type: application/json
+
+{
+	"PostId": 1
+}
+
+###
+
+DELETE {{url}}/posts/likes/14/1

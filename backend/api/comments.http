@@ -1,0 +1,34 @@
+###
+
+GET {{url}}/comments
+
+###
+
+GET {{url}}/comments/post/10
+
+###
+
+GET {{url}}/comments/1
+
+###
+
+POST {{url}}/comments
+Content-Type: application/json
+
+{
+	"PostId": 1,
+	"content": "Contenu du commentaire"
+}
+
+###
+
+PUT {{url}}/comments/1
+Content-Type: application/json
+
+{
+	"content": "Contenu du commentaire modifié"
+}
+
+###
+
+DELETE {{url}}/comments/3

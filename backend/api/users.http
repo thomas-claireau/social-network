@@ -1,0 +1,45 @@
+###
+
+GET {{url}}
+
+###
+
+GET {{url}}/users
+
+###
+
+GET {{url}}/users/1
+
+###
+
+POST {{url}}/users
+Content-Type: application/json
+
+{
+	"email": "jfd.delatour@gmail.com",
+	"password": "password",
+	"firstname": "Jean",
+	"lastname": "Delatour",
+	"username": "thisisjean",
+	"biography": "lorem ipsum",
+	"isAdmin": false
+}
+
+###
+
+PUT {{url}}/users/11
+Content-Type: application/json
+
+{
+	"email": "j.delatour@gmail.com",
+	"newPassword": "fd",
+	"firstname": "Jean",
+	"lastname": "Delatour",
+	"username": "thisisjean",
+	"biography": "lorem ipsum 3",
+	"isAdmin": false
+}
+
+###
+
+DELETE {{url}}/users/2
