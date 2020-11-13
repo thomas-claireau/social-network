@@ -1,6 +1,6 @@
 <template>
   <div v-frag>
-    <img :src="src" />
+    <img :class="classes" :src="src" />
   </div>
 </template>
 
@@ -13,6 +13,9 @@ export default {
     }
   },
   props: {
+    classes: {
+      type: String,
+    },
     url: {
       type: String,
       required: true,
@@ -40,5 +43,5 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 </style>

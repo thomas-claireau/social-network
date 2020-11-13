@@ -1,0 +1,29 @@
+@import '~sass-rem';
+
+// variables
+$break-large: 1224px;
+$break-medium: 1024px;
+$break-tablet: 768px;
+$break-small: 420px;
+
+$mainFont: 'Montserrat', sans-serif;
+
+$error: red;
+
+$rem-baseline: 16px;
+
+html {
+  @include rem-baseline;
+}
+
+body {
+  font-family: $mainFont;
+  margin: 0;
+  padding: 0;
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+}
