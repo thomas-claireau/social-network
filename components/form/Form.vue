@@ -12,6 +12,7 @@
         :disabled="item.type == 'submit' && disabledForm"
       />
     </div>
+    <AdditionalLinks :type="name" />
   </form>
 </template>
 
