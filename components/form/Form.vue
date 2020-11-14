@@ -84,12 +84,13 @@ export default {
 
 <style lang="scss" scoped>
 form {
-  height: 100%;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   position: relative;
   z-index: 1;
+  margin: rem(50px auto);
 }
 </style>

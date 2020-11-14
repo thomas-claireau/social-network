@@ -29,7 +29,6 @@ export default {
   created() {
     if (process.browser && this.url) {
       const host = window.location.host
-      console.log(host)
     }
   },
   methods: {
