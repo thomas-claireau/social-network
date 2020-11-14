@@ -22,7 +22,14 @@
 
     <FieldInfo v-if="type != 'submit'" :type="name" />
 
-    <Button v-if="type == 'submit'" :disabled="disabled" />
+    <Button
+      v-if="type == 'submit'"
+      tag="button"
+      type="form"
+      :disabled="disabled"
+    >
+      Se connecter
+    </Button>
   </div>
 </template>
 
