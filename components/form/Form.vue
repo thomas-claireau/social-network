@@ -9,7 +9,7 @@
         :regex="regex[item.name]"
         :placeholder="item.placeholder"
         @input-changed="updateForm"
-        :disabled="item.type == 'submit' && error"
+        :disabled="item.type == 'submit' && disabledForm"
       />
     </div>
   </form>
@@ -20,11 +20,11 @@ export default {
   name: 'Form',
   data() {
     return {
-      error: true,
       form: {},
+      disabledForm: true,
       regex: {
         email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        password: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+        password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
       },
     }
   },
@@ -49,15 +49,31 @@ export default {
   created() {
     // create form structure
     this.structure.forEach((item) => {
-      if (item.name != 'submit') this.$set(this.form, item.name, null)
+      if (item.name != 'submit')
+        this.$set(this.form, item.name, { value: '', error: null })
     })
   },
   methods: {
     updateForm(data, index) {
-      this.$set(this.form, index, data)
+      this.$set(this.form, index.name, { value: data, error: index.error })
+      this.isError()
     },
     sendForm(e) {
       const formData = new FormData(e.target)
+    },
+    isError() {
+      for (const item of this.structure) {
+        if (item.name != 'submit') {
+          const field = this.form[item.name]
+
+          if (field.error || field.error == null) {
+            this.disabledForm = true
+            break
+          }
+
+          this.disabledForm = false
+        }
+      }
     },
   },
 }

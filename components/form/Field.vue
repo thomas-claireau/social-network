@@ -32,7 +32,6 @@ export default {
   data() {
     return {
       value: null,
-      error: null,
     }
   },
   props: {
@@ -45,7 +44,11 @@ export default {
     disabled: Boolean,
   },
   updated() {
-    this.handleError()
+    this.$emit('input-changed', this.value, {
+      name: this.name,
+      value: this.value,
+      error: this.error,
+    })
   },
   methods: {
     focus(e) {
@@ -53,13 +56,6 @@ export default {
     },
     blur(e) {
       if (e.target.parentNode) e.target.parentNode.classList.remove('focus')
-    },
-    handleError() {
-      if (!this.regex || !this.value) {
-        this.error = null
-      } else {
-        this.error = !this.regex.test(this.value)
-      }
     },
   },
   computed: {
@@ -69,8 +65,12 @@ export default {
       },
       set(newValue) {
         this.value = newValue
-        this.$emit('input-changed', newValue, this.name)
       },
+    },
+    error() {
+      if (!this.regex || !this.value) return null
+
+      return !this.regex.test(this.value)
     },
   },
 }

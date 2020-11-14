@@ -12,7 +12,7 @@ export default {
     message() {
       switch (this.type) {
         case 'password':
-          return 'Le mot de passe doit contenir 8 caractères minimum, 1 majuscule, 1 minuscule et 1 chiffre'
+          return 'Le mot de passe doit contenir, au minimum, 8 caractères, 1 majuscule, 1 chiffre et 1 caractère accentué'
           break
         default:
           return ''
