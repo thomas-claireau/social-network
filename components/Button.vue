@@ -1,5 +1,5 @@
 <template>
-  <div v-frag>
+  <div class="button-container">
     <button
       :class="supClasses"
       v-if="tag == 'button'"
@@ -62,7 +62,6 @@ export default {
   text-decoration: none;
   color: #fff;
   background-color: $default;
-  box-shadow: rem(0 3px 8px 0 transparent);
   border: none;
   -webkit-appearance: none;
   cursor: pointer;
@@ -71,9 +70,7 @@ export default {
   font-family: $mainFont;
 
   &:hover:not(:disabled) {
-    $defaultLight: lighten($default, 20%);
-    background-color: darken($default, 4%);
-    box-shadow: rem(0 3px 8px 0 $defaultLight);
+    background-color: darken($default, 5%);
     transition: all 0.15s ease-in-out;
   }
 
@@ -102,7 +99,7 @@ export default {
       }
 
       &:disabled {
-        background-color: lighten($variable, 15%);
+        background-color: lighten($default, 15%);
       }
     }
   }

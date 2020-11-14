@@ -27,6 +27,8 @@
       tag="button"
       type="form"
       :disabled="disabled"
+      classes="rounded"
+      bg="success"
     >
       Se connecter
     </Button>
@@ -181,4 +183,13 @@ export default {
     }
   }
 }
+
+::v-deep .button-container {
+  button {
+    width: 100%;
+  }
+}
+</style>
+
+<style scoped lang="scss">
 </style>
