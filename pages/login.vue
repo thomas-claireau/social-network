@@ -25,7 +25,13 @@ export default {
           id: 'password',
           placeholder: 'Mot de passe',
         },
-        { name: 'submit', tag: 'button', type: 'submit', id: 'submit' },
+        {
+          name: 'submit',
+          tag: 'button',
+          type: 'submit',
+          id: 'submit',
+          value: 'Se connecter',
+        },
       ],
     }
   },
@@ -48,6 +54,12 @@ export default {
     height: 100%;
     background-color: #000;
     opacity: 0.8;
+  }
+
+  /deep/ form {
+    max-width: rem(300px);
+    width: rem(300px);
+    margin: auto;
   }
 
   /deep/ .background-starter {

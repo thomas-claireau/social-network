@@ -30,7 +30,7 @@
       classes="rounded"
       bg="success"
     >
-      Se connecter
+      {{ label }}
     </Button>
   </div>
 </template>
@@ -51,6 +51,7 @@ export default {
     placeholder: String,
     regex: RegExp,
     disabled: Boolean,
+    label: String,
   },
   updated() {
     this.$emit('input-changed', this.value, {
@@ -87,8 +88,7 @@ export default {
 
 <style lang="scss" scoped>
 .form-field {
-  max-width: rem(300px);
-  width: rem(300px);
+  width: 100%;
   display: flex;
   flex-direction: column;
 
@@ -138,7 +138,7 @@ export default {
           transition: all 0.15s ease-in-out;
         }
 
-        g path {
+        path {
           fill: $error;
           transition: all 0.3s ease-in-out;
         }
@@ -154,7 +154,7 @@ export default {
         transition: all 0.15s ease-in-out;
       }
 
-      g path {
+      path {
         fill: #fff;
         transition: all 0.3s ease-in-out;
       }

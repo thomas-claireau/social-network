@@ -1,6 +1,6 @@
 <template>
   <div class="additional-links">
-    <NuxtLink to="/login" v-if="type == 'signup'">Se connecter</NuxtLink>
+    <NuxtLink to="/login" v-if="type == 'signup'">J'ai déja un compte</NuxtLink>
     <NuxtLink to="/signup" v-if="type == 'login'">Créer un compte</NuxtLink>
     <NuxtLink to="/forgot-password" v-if="type != 'signup'"
       >Mot de passe oublié</NuxtLink
@@ -10,6 +10,9 @@
 
 <script>
 export default {
+  created() {
+    console.log(this.type)
+  },
   props: {
     type: String,
   },

@@ -10,6 +10,7 @@
         :placeholder="item.placeholder"
         @input-changed="updateForm"
         :disabled="item.type == 'submit' && disabledForm"
+        :label="item.value"
       />
     </div>
     <AdditionalLinks :type="name" />
@@ -26,6 +27,7 @@ export default {
       regex: {
         email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        'password-confirmation': /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
       },
     }
   },
