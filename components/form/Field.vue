@@ -141,7 +141,7 @@ export default {
     &.textarea {
       align-items: flex-start;
       padding: rem(15px);
-      min-height: rem(150px);
+      min-height: rem(125px);
 
       &:before {
         border-radius: rem(10px);
@@ -149,6 +149,7 @@ export default {
 
       textarea {
         width: 100%;
+        min-height: rem(125px);
         height: 100%;
         margin-left: rem(10px);
         margin-top: rem(-3px);
