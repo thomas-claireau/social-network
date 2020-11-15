@@ -66,7 +66,10 @@ export default {
     sendForm(e) {
       const formData = new FormData(e.target)
 
-      if (this.disabledForm) this.$store.commit('users/addUsers', formData)
+      if (this.disabledForm) {
+        this.$store.dispatch('loading/setLoading', true)
+        this.$store.dispatch('users/addUsers', formData)
+      }
     },
     isError() {
       for (const item of this.structure) {

@@ -18,11 +18,11 @@ export const mutations = {
 }
 
 export const actions = {
-  addError({ commit }, payload) {
+  async addError({ commit }, payload) {
     console.log('actions - addError')
     if (payload) commit('ADD_ERROR', payload)
   },
-  removeError({ commit }) {
+  async removeError({ commit }) {
     commit('REMOVE_ERROR')
   },
 }

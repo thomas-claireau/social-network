@@ -1,5 +1,6 @@
 <template>
   <div class="starter">
+    <Loading />
     <Error />
     <SvgLoader classes="logo" url="img/logo-social-network" />
     <ImgLoader classes="background-starter" url="img/background-starter.jpg" />

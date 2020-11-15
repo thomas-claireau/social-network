@@ -5,16 +5,18 @@ export const state = () => ({
   users: [],
 })
 
-export const mutations = {
+export const actions = {
   async addUsers(state, payload) {
     axios
       .post('http://localhost:3000/users', payload)
       .then((res) => {
         console.log(res)
       })
-      .catch((error) => this.dispatch('error/addError', error))
-
-    // console.log('passe')
-    // this.dispatch('error/addError')
+      .catch((error) => {
+        this.dispatch('error/addError', error)
+      })
+      .finally(() => {
+        this.dispatch('loading/setLoading', false)
+      })
   },
 }

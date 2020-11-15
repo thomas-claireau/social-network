@@ -46,7 +46,7 @@ export default {
   color: #fff;
   font-weight: 600;
   border-radius: rem(3px);
-  z-index: 1000;
+  z-index: 100;
 
   @media screen and (max-width: $break-tablet) {
     max-width: none;
