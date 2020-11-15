@@ -9,13 +9,15 @@
 <style lang="scss" scoped>
 .starter {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
+  padding: rem(50px 0);
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
 
   &:before {
     content: '';

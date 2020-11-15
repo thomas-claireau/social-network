@@ -3,7 +3,7 @@
 // variables
 $break-large: 1224px;
 $break-medium: 1024px;
-$break-tablet: 768px;
+$break-tablet: 767px;
 $break-small: 420px;
 
 $mainFont: 'Montserrat', sans-serif;
@@ -30,6 +30,7 @@ html {
 }
 
 body {
+  min-height: 100vh;
   font-family: $mainFont;
   margin: 0;
   padding: 0;
@@ -38,5 +39,12 @@ body {
   *:before,
   *:after {
     box-sizing: border-box;
+  }
+
+  #__nuxt,
+  #__layout {
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
   }
 }

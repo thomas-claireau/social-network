@@ -1,6 +1,6 @@
 <template>
   <form :action="action" :method="method" @submit.prevent="sendForm">
-    <div v-frag v-for="(item, index) in structure" :key="index">
+    <div class="row" v-for="(row, rowIndex) in structure" :key="rowIndex">
       <Field
         :tag="item.tag"
         :type="item.type"
@@ -11,6 +11,8 @@
         @input-changed="updateForm"
         :disabled="item.type == 'submit' && disabledForm"
         :label="item.value"
+        v-for="(item, index) in row"
+        :key="index"
       />
     </div>
     <AdditionalLinks :type="name" />
@@ -92,5 +94,42 @@ form {
   position: relative;
   z-index: 1;
   margin: rem(50px auto);
+
+  .row {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    @media screen and (max-width: $break-tablet) {
+      flex-direction: column;
+    }
+
+    &:not(:first-child) {
+      margin-top: rem(35px);
+
+      @media screen and (max-width: $break-tablet) {
+        margin-top: rem(20px);
+      }
+    }
+
+    /deep/ .form-field {
+      @media screen and (max-width: $break-tablet) {
+        width: 95%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      &:not(:first-child) {
+        margin-left: rem(10px);
+
+        @media screen and (max-width: $break-tablet) {
+          margin-left: auto;
+          margin-top: rem(20px);
+        }
+      }
+    }
+  }
 }
 </style>

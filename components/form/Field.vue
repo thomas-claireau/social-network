@@ -17,7 +17,16 @@
         :pattern="regex"
       />
 
-      <SvgLoader url="img/icons/cross" v-if="type !== 'submit'" />
+      <textarea
+        :name="name"
+        :id="id"
+        :placeholder="placeholder"
+        @click="focus"
+        @blur="blur"
+        v-model="inputData"
+        :pattern="regex"
+        v-if="tag === 'textarea'"
+      ></textarea>
     </div>
 
     <FieldInfo v-if="type != 'submit'" :type="name" />
@@ -92,21 +101,74 @@ export default {
   display: flex;
   flex-direction: column;
 
-  &:not(:first-child) {
-    margin-top: rem(35px);
-  }
-
   > div {
     position: relative;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 
-    &.input,
-    &.textarea {
+    &.input {
       min-height: rem(50px);
       padding: 0 rem(15px);
 
+      &:before {
+        border-radius: rem(30px);
+      }
+
+      input {
+        width: 100%;
+        height: 100%;
+        margin-left: rem(10px);
+        -webkit-appearance: none;
+        background-color: transparent;
+        border: none;
+        outline: 0;
+        font-size: rem(16px);
+        font-weight: 400;
+        color: #fff;
+
+        &::placeholder {
+          position: relative;
+          top: rem(2px);
+          font-size: rem(16px);
+          font-weight: 400;
+          opacity: 0.7;
+          color: #fff;
+        }
+      }
+    }
+
+    &.textarea {
+      align-items: flex-start;
+      padding: rem(15px);
+      min-height: rem(150px);
+
+      &:before {
+        border-radius: rem(10px);
+      }
+
+      textarea {
+        width: 100%;
+        height: 100%;
+        margin-left: rem(10px);
+        margin-top: rem(-3px);
+        background-color: transparent;
+        border: none;
+        font-family: $mainFont;
+        font-size: rem(15px);
+        color: #fff;
+        outline: 0;
+        resize: none;
+
+        &::placeholder {
+          color: #fff;
+          font-style: italic;
+        }
+      }
+    }
+
+    &.input,
+    &.textarea {
       &:before {
         content: '';
         position: absolute;
@@ -115,7 +177,6 @@ export default {
         width: 100%;
         height: 100%;
         background-color: #fff;
-        border-radius: rem(30px);
         opacity: 0.15;
         transition: all 0.3s ease-in-out;
         z-index: -1;
@@ -131,13 +192,6 @@ export default {
 
     &.error {
       /deep/ svg {
-        &.cross {
-          height: rem(15px);
-          opacity: 1;
-          transform: translateX(rem(50px));
-          transition: all 0.15s ease-in-out;
-        }
-
         path {
           fill: $error;
           transition: all 0.3s ease-in-out;
@@ -148,37 +202,9 @@ export default {
     /deep/ svg {
       min-width: rem(17px);
 
-      &.cross {
-        opacity: 0;
-        transform: translateX(rem(0px));
-        transition: all 0.15s ease-in-out;
-      }
-
       path {
         fill: #fff;
         transition: all 0.3s ease-in-out;
-      }
-    }
-
-    input {
-      width: 100%;
-      height: 100%;
-      margin-left: rem(10px);
-      -webkit-appearance: none;
-      background-color: transparent;
-      border: none;
-      outline: 0;
-      font-size: rem(16px);
-      font-weight: 400;
-      color: #fff;
-
-      &::placeholder {
-        position: relative;
-        top: rem(2px);
-        font-size: rem(16px);
-        font-weight: 400;
-        opacity: 0.7;
-        color: #fff;
       }
     }
   }
