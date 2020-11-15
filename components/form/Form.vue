@@ -9,7 +9,7 @@
         :regex="regex[item.name]"
         :placeholder="item.placeholder"
         @input-changed="updateForm"
-        :disabled="item.type == 'submit' && disabledForm"
+        :test="item.type == 'submit' && disabledForm"
         :label="item.value"
         v-for="(item, index) in row"
         :key="index"
@@ -65,6 +65,8 @@ export default {
     },
     sendForm(e) {
       const formData = new FormData(e.target)
+
+      if (this.disabledForm) this.$store.commit('users/addUsers', formData)
     },
     isError() {
       for (const item of this.structure) {

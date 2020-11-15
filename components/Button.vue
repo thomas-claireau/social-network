@@ -67,6 +67,7 @@ export default {
   transition: all 0.3s ease-in-out;
   font-size: rem(16px);
   font-family: $mainFont;
+  outline: 0;
 
   &:hover:not(:disabled) {
     background-color: darken($default, 5%);
